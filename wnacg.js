@@ -6,7 +6,7 @@ const fs=require('fs');
 async function download (page,bookNumber)
 {
     console.log(page);
-    let web='doujinantena';
+    let web='wnacg';
     let dir=createDir(web,bookNumber);
     for(let i=0;i<=page.pageNumber-1;i++)
     {
