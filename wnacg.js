@@ -44,7 +44,13 @@ function getPages(uri){
         });
     });
 }
-
+if(process.argv.length<3){
+	console.log('usage: node request.js ehentai_website');
+	//console.log('example: node '+__filename+' https://e-hentai.org/g/618395/0439fa3666/');
+}
+else{
+	getImage(process.argv[2]);
+}
 function downloadImage(number,pages,type,targetDir){
 
     for(let i=1;i<pages-1;i++)
