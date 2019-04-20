@@ -34,8 +34,7 @@ function getPages(uri){
     });
 }
 if(process.argv.length<3){
-	console.log('usage: node request.js ehentai_website');
-	//console.log('example: node '+__filename+' https://e-hentai.org/g/618395/0439fa3666/');
+	console.log('usage: node request.js wnacg_website');
 }
 else{
 	let bookname ='https://m.wnacg.net/photos-slide-aid-'+process.argv[2]+'.html';
