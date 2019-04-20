@@ -33,52 +33,30 @@ function getPages(uri){
             console.log('get pages');
             let html=new JSDOM(body);
             let document=html.window.document;
-
-            let pagesElement=document.getElementById('tags').nextElementSibling;
-            let pagesString=pagesElement.innerHTML.split('pages');
-            //console.log(pagesString);
-            let pages=parseInt(pagesString[0]);
-            
-            let galleryElement=document.getElementsByClassName("gallerythumb")[2].childNodes[1].attributes["data-src"].value;
-            let test=galleryElement.split('galleries/')[1];
-            test=test.split('/')[0];
-            let galleryNumber=parseInt(test);
-
-            let bookName=document.getElementById("info").childNodes[3].innerText;
-            //get
-            let Package={
-                galleryNumber:galleryNumber,
-                pageNumber:pages,
-                filetype:[],
-            };
-
-            let galleryElementArray=document.getElementsByClassName("gallerythumb");
-            
-            for(let i=0;i<=pages-1;i++)
-            {
-                let element=galleryElementArray[i].childNodes[1].attributes["data-src"].value;
-                element.split('.');
-                Package.filetype[i]=element.split('.')[3];
+            let imageElement=document.getElementsByTagName('img');
+            let pages=document.getElementsByTagName('img').length;
+            for(let i=0;i<pages-1;i++){
+                let resource="https:"+imageElement[i].getAttribute('src');
+                request(resource).pipe(fs.createWriteStream(`${targetDir}/${page}.jpg`)).on('close',function(){
+                    console.log(`${page} done`);
+                });
             }
-
-            resolve(Package);
         });
     });
 }
 
-async function downloadImage(fnumber,lnumber,i,type,ltargetDir,ftargetDir){
+function downloadImage(number,pages,type,targetDir){
 
-    let uri=`https://t2.wnacg.download/data/t/${fnumber}/${lnumber}/${i}.${type[i-1]}`;
-
-    const res=await request(uri).pipe(fs.createWriteStream(`${ftargetDir}/${ltargetDir}/${i}.jpg`));
-    
-
-    return new Promise((resolve,reject)=>{
-        res.on(`close`,()=>{
-            console.log(`${i} done`);
-            resolve(`done`);
+    for(let i=1;i<pages-1;i++)
+    {
+        //need to adjust array iterate
+        //i from 1-25, type from 0-24
+        let page = i.toString().padStart('3','0');
+        let uri=`http://img2.wnacg.download./${number}/${page}${type}`;
+        request(uri).pipe(fs.createWriteStream(`${targetDir}/${page}.jpg`)).on('close',function(){
+            console.log(`${page} done`);
         });
-    });
+    }
 }
 
 module.exports={
